@@ -71,8 +71,6 @@ def insertionSort(L):
 #         NOTE: Notice that, for each index, all items to the left are in order, and you are inserting the next item into the correct spot.
 #     """
     for i in range (1, len(L)):
-        print(L)
-        print(L[i])
         index = i -1 
         marker = L[i]
         while index >= 0 and marker < L[index]:
