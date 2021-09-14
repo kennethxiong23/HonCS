@@ -1,8 +1,7 @@
 """coin flip using recursion, countes the amount of times that heads occured"""
 
 import random
-import sys
-sys.setrecursionlimit(2147483647)
+
 def countHeads(flips):
     if flips <= 0 :
         return 0
