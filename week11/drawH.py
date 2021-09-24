@@ -19,14 +19,10 @@ def drawH(pt, level, size, win):
     p6 = pt.clone()
     p6.move(-size, 0)
     middlelines = Line(p5,p6)
-    if level <= 0:
-        leftedge.draw(win)
-        rightedge.draw(win)
-        middlelines.draw(win)
-    else:
-        leftedge.draw(win)
-        rightedge.draw(win)
-        middlelines.draw(win)
+    leftedge.draw(win)
+    rightedge.draw(win)
+    middlelines.draw(win)
+    if level > 1:
         drawH(p1, level-1, size/2, win)
         drawH(p2, level-1, size/2, win)
         drawH(p3, level-1, size/2, win)
