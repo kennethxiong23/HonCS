@@ -37,10 +37,10 @@ def recursiveRainbow(pt, level, size, win):
 
     drawRainbow(pt, size, win)
     if level > 1:
-        drawH(p1, level-1, size/2, win)
-        drawH(p2, level-1, size/2, win)
-        drawH(p3, level-1, size/2, win)
-        drawH(p4, level-1, size/2, win)
+        recursiveRainbow(p1, level-1, size/2, win)
+        recursiveRainbow(p2, level-1, size/2, win)
+        recursiveRainbow(p3, level-1, size/2, win)
+        recursiveRainbow(p4, level-1, size/2, win)
 
 def main():
     win = GraphWin("h", 600, 600)
