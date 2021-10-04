@@ -7,7 +7,7 @@
     Date: Fall 2021
 """
 from time import time
-
+t1 = time()
 def readReviews (fileName):
     """
     Purpose: Reads in the input files that contains all the reviews and seperates them into a
@@ -140,6 +140,8 @@ def main():
             else: #otherwise, remove previous value and insert new
                 score = sentimentScore[index][0] + rating
                 sentimentScore[index][0] = score
+    t2 = time()
+    print(t2-t1)
 
     selectionSort(sentimentScore)
     printReviews(sentimentScore)

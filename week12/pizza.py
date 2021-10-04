@@ -9,19 +9,17 @@ class Pizza(object):
         return s
     
     def getSlices(self):
-        if self.slices == 0:
-            return 0
-        else:
-            return self.slices
+        return self.slices
     
     def getTopping(self):
         return self.topping
 
     def eatSlice(self):
-        self.slices -= 1
+        if self.slices != 0:
+            self.slices -= 1
+        
 
     ###  TO BE IMPLEMENTED BY YOU  ###
-    pass
 
 
 
