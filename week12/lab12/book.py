@@ -5,55 +5,54 @@ class Book(object):
         """ constructor for book object, given title(str), author(str), year(int), filename(str)
         """
         self.title = title
+        #year book was published
         self.year = year
         self.author = author
+        #variable for the path of the file
         self.filename = filename
         self.bookmark = 0
 
     def toString (self):
         """ pretty-print info about this object """
-        return "%25sby %20s(%s)" %(self.title, self.author, self.year)
+        return "%25sby %20s(%s)" % (self.title, self.author, self.year)
 
     def getTitle(self):
-        "returns the title"
         return self.title
     
     def getAuthor(self):
-        "returns the author"
         return self.author
 
     def getFilename(self):
-        "returns the filename"
         return self.filename
 
     def getYear(self):
-        "returns the year"
         return self.year
     
     def getBookmark(self):
-        "returns the bookmark spot"
         return self.bookmark
     
     def setBookmark(self, bookmark):
-        "set bookmark spot"
         self.bookmark = bookmark
 
     def getText(self):
-        "get the text"
-        readFile = open(self.filename, "r")
-        text = ""
-        for line in readFile:
+        inFile = open(self.filename, "r")
+        fullText = ""
+        for line in inFile:
             if line[0] != "#":
-                line = line.strip()
-                text = text + line + "\n"
-        return text
+                text = line.strip()              
+                fullText = fullText + text + "\n"
+        inFile.close()
+        return fullText
 
 
 if __name__ == '__main__':
 
     print("Testing the Book class...")
-    myBook = Book("Gettysburg Address", "Abe Lincoln", 1863,
-    "book-database/gettysburg.txt")
+    # myBook = Book("Gettysburg Address", "Abe Lincoln", 1863,
+    # "book-database/gettysburg.txt")
+    myBook = Book("Alice in wonderland", "persn", 1862,
+    "book-database/alice.txt")
+    
 
     print("Testing toString...")
     print(myBook.toString())
@@ -68,5 +67,9 @@ if __name__ == '__main__':
     print("bookmark is:", myBook.getBookmark())
     myBook.setBookmark(12)
     print("now bookmark is:", myBook.getBookmark())
+    print("title", myBook.getTitle())
+    print("year", myBook.getYear())
+    print("filename", myBook.getFilename())
+    print("author", myBook.getAuthor())
 
-    ################ Write additional tests below ###################
+   

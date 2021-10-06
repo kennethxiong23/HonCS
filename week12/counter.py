@@ -20,7 +20,6 @@ class Counter(object):
 
 
 
-
 if __name__ == "__main__":      # test code goes here for custom Classes
 
     c = Counter(60)
