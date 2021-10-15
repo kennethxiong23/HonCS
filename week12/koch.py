@@ -9,7 +9,7 @@ def koch(t, order, size):
             print(t)
             koch(t, order-1, size/3)
             t.turn(angle)
-
+    
 
 def main():
     gw = GraphWin("zturtle test", 800, 600)
