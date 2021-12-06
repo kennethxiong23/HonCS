@@ -12,5 +12,7 @@ def fibonacci(num):
 def main():
     num = int(input("Give me a int"))
     print(fibonacci(num))
-
+    for i in range(3,21):
+        ratio = fibonacci(i-2)/fibonacci(i-1)
+        print("%s:%s" %(i-2,ratio))
 main()

@@ -1,18 +1,19 @@
 """
     Description: This program remove a user specified character from a given word.
-    Name: Kenneth
+    Author: Kenneth
     Date: Fall 2021
 """
+
 def getChar():
     """
     Purpose: validates the user inputted character to make sure it is only one 
     Parameters: None
     Return Val: single length character
     """
-    char = input("ch    :")
+    char = input("ch: ")
     while len(char) > 1:
         print("Invalid. Please enter a single character")
-        char = input("ch    :")
+        char = input("ch: ")
     
     return char
 
@@ -26,8 +27,10 @@ def removeChar(string, char):
         return ""
     else:
         if string[-1] != char:
-            return removeChar(string[0:-1], char) + string[-1] 
-        return  removeChar(string[0:-1], char)
+            newStr = removeChar(string[:-1], char) + string[-1] 
+        else:
+            newStr = removeChar(string[:-1], char)
+        return newStr
 
 def main():
     string = input("string: ")
