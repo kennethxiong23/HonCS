@@ -1,12 +1,12 @@
 """
-    Description: This program draws a design and then draws it recursively, progressively 
-                         getting smaller and smaller
-    Name: Kenneth
+    Description: This program draws a design and then draws it recursively, 
+                 progressively getting smaller and smaller
+    Author: Kenneth
     Date: fall 2021
 """
-
 from graphics import *
 import sys
+
 def drawRainbow(pt, size, win):
     """
     Purpose: Draws a rainbow
@@ -24,7 +24,9 @@ def drawRainbow(pt, size, win):
 def recursiveRainbow(pt, level, size, win):
     """
     Purpose: Recursively draws a rainbow
-    Parameters: central Point(point obj), degree of recursion(int), size of rainbow(int), window(graphWin obj)
+    Parameters: central Point(point obj), degree of recursion(int), size of 
+                rainbow(int), window(graphWin obj)
+    Return Val: None
     """
     p1 = pt.clone()
     p1.move(-size,-size)
