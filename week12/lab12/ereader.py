@@ -26,6 +26,7 @@ def main():
     owner = newUser()                   # Display instructions and get user's name
     userSwindle = Swindle(owner)        # Create a new Swindle ereader for them
 
+
     while True:
         menuChoice = mainMenu()         # Display ereader's main menu
         if menuChoice == 1:
@@ -36,6 +37,7 @@ def main():
             userSwindle.read()          # Choose a book to read
         else:
             break                       # Turn off ereader (quit the program)
+
 
 
 main()

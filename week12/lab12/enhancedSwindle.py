@@ -1,5 +1,5 @@
 from book import *
-
+from os.path import isfile
 
 def readBookDatabase(filename):
     """ read in book info from bookdb.txt, save each line as a Book object in list.
@@ -32,11 +32,14 @@ def checkList(list, str):
 class Swindle(object):
     """ class for a single Swindle object """
 
-    def __init__(self, owner):
+    def __init__(self, owner, ownedBooks, avaliableBooks):
         """ constructor for swindle object, given owner """
-        self.availableBooks = readBookDatabase("bookdb.txt")
+        if avaliableBooks == []:
+            self.availableBooks = readBookDatabase("bookdb.txt")
+        else:
+            self.availableBooks = avaliableBooks
         self.owner = owner
-        self.ownedBooks = []
+        self.ownedBooks = ownedBooks
         self.pageLength = 20
 
     def __str__(self):
@@ -114,8 +117,26 @@ class Swindle(object):
             for index in range(len(self.availableBooks)):
                 print("%d:%s" %(index + 1, self.availableBooks[index].toString()))
     
-    def getOnwer(self):
+    def getOwner(self):
         return self.owner
+        
+    def getBooks(self):
+        """returns list of all books"""
+        allBooks = self.ownedBooks + self.availableBooks
+        booksInfo = []
+        for book in allBooks:
+            bookInfo = []
+            if book in self.availableBooks:
+                bookInfo.append("available")
+            else:
+                bookInfo.append("owned")
+            bookInfo.append(book.getTitle())
+            bookInfo.append(book.getAuthor())
+            bookInfo.append(book.getYear())
+            bookInfo.append(book.getFilename())
+            bookInfo.append(book.getBookmark())
+            booksInfo.append(bookInfo)
+        return booksInfo
 
     def buy(self):
         """allows user to buy book from available books"""
