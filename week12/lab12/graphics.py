@@ -219,10 +219,11 @@ class GraphWin(tk.Canvas):
         master.resizable(0,0)
         self.foreground = "black"
         self.items = []
-        self.mouseX = None
-        self.mouseY = None
+        # self.mouseX = None
+        # self.mouseY = None
         self.bind("<Button-1>", self._onClick)
         self.bind_all("<Key>", self._onKey)
+        self.bind("<Motion>", self._checkPos)
         self.height = int(height)
         self.width = int(width)
         self.autoflush = autoflush
@@ -330,6 +331,23 @@ class GraphWin(tk.Canvas):
             x,y = self.toWorld(self.mouseX, self.mouseY)
             self.mouseX = None
             self.mouseY = None
+            return Point(x,y)
+        else:
+            return None
+
+    def _checkPos(self, e):
+        self.mouseX = e.x
+        self.mouseY = e.y
+        if self._mouseCallback:
+            self._mouseCallback(Point(e.x, e.y))
+
+    def test(self):
+        print(self.mouseX)
+        if self.mouseX != None and self.mouseY != None:
+            x,y = self.toWorld(self.mouseX, self.mouseY)
+            self.mouseX = None
+            self.mouseY = None
+            print(Point(x,y))
             return Point(x,y)
         else:
             return None

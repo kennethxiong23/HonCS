@@ -5,12 +5,17 @@
 """
 from graphics import *
 
+def test2():
+    print("This Button is Working")
+    return
+
 class Button(object):
     """class for a single button object"""
     def __init__(self, shape, text, win):
+        self.center = shape.getCenter()
         self.win = win
         self.shape = shape
-        self.text = text
+        self.text = Text(self.center, text)
     
     def __string__(self):
         """fancy type for the shape object and text within"""
@@ -21,12 +26,12 @@ class Button(object):
         self.shape.move(dx, dy)
         return
 
-    def setFill(color):
+    def setFill(self, color):
         """set fill of object color"""
         self.shape.setFill(color)
         return
 
-    def setOuline(color):
+    def setOuline(self, color):
         """set outline color of object"""
         self.shape.setOutline(color)
         return
@@ -45,7 +50,7 @@ class Button(object):
     
     def setText(self, text):
         """set text inside of button"""
-        self.text = text
+        self.text.setText(text)
         return
 
     def getCenter(self):
@@ -58,36 +63,49 @@ class Button(object):
 
     def draw(self, win):
         """draws button on window"""
-        center = self.shape.getCenter()
-        text = Text(center, self.text)
-        # text.setWidth(self.getWidth())
-        text.draw(win)
         self.shape.draw(win)
+        self.text.draw(win)
+        return
+
+    def setTextColor(self, color):
+        """sets color of the text"""
+        self.text.setTextColor(color)
+        return
+    
+    def setFace(self, family):
+        """set the font face"""
+        self.text.setFace(family)
+        return
+    
+    def setSize(self, size):
+        """sets the text size"""
+        self.text.setSize(size)
+        return
+    
+    def setStyle(self, style):
+        """sets the style of text"""
+        self.text.setStyle(style)
         return
 
     def onClick(self, callback):
         """check if button is pressed"""
         click = self.win.getMouse()
-        print(click)
         topLeftPoint = self.shape.getP1()
         bottomRightPoint = self.getP2()
-        print(click)
-        print(topLeftPoint)
-        print(bottomRightPoint)
 
         if click.getX() <= bottomRightPoint.getX() and  click.getX() >=topLeftPoint.getX():
             if click.getY() <= bottomRightPoint.getY() and  click.getY() >=topLeftPoint.getY():
                 callback()
         else:
             return
-def test2():
-    print("hawdawdawdawdawdawdadawdawdi")
+
 if __name__ == "__main__":
     win = GraphWin("test", 500, 500)
     p1 = Point(100,100)
     p2 = Point(200,200)
     rectancle = Rectangle(p1,p2)
-    test =  Button(rectancle, "hawdawdawdawdawdawdadawdawdi", win)
+    test =  Button(rectancle, "Tests", win)
+    test.setFill("red")
     test.draw(win)
     test.onClick(test2)
     win.getMouse()
