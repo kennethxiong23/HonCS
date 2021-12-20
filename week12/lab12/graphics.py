@@ -219,11 +219,14 @@ class GraphWin(tk.Canvas):
         master.resizable(0,0)
         self.foreground = "black"
         self.items = []
-        # self.mouseX = None
-        # self.mouseY = None
+        self.mouseX = None
+        self.mouseY = None
         self.bind("<Button-1>", self._onClick)
         self.bind_all("<Key>", self._onKey)
-        self.bind("<Motion>", self._checkPos)
+        #https://stackoverflow.com/questions/3288001/how-do-i-bind-an-event-to-the-left-mouse-button-being-held-down
+        self.mousePressed = False
+        self.bind("<B1-Motion>", self._onClick)
+        self.bind("<ButtonRelease-1>", self.onMouseUp)
         self.height = int(height)
         self.width = int(width)
         self.autoflush = autoflush
@@ -233,7 +236,10 @@ class GraphWin(tk.Canvas):
         master.lift()
         self.lastKey = ""
         if autoflush: _root.update()
-
+    
+    def onMouseUp(self, e):
+        self.mousePressed = False
+        
     def __repr__(self):
         if self.isClosed():
             return "<Closed GraphWin>"
@@ -335,22 +341,9 @@ class GraphWin(tk.Canvas):
         else:
             return None
 
-    def _checkPos(self, e):
-        self.mouseX = e.x
-        self.mouseY = e.y
-        if self._mouseCallback:
-            self._mouseCallback(Point(e.x, e.y))
-
-    def test(self):
-        print(self.mouseX)
-        if self.mouseX != None and self.mouseY != None:
-            x,y = self.toWorld(self.mouseX, self.mouseY)
-            self.mouseX = None
-            self.mouseY = None
-            print(Point(x,y))
-            return Point(x,y)
-        else:
-            return None
+    def getMouseUp(self):
+        x = self.mouseY
+        return self.mousePressed
 
     def getKey(self):
         """Wait for user to press a key and return it as a string."""
@@ -401,6 +394,7 @@ class GraphWin(tk.Canvas):
     def _onClick(self, e):
         self.mouseX = e.x
         self.mouseY = e.y
+        self.mousePressed = True
         if self._mouseCallback:
             self._mouseCallback(Point(e.x, e.y))
 

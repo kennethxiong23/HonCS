@@ -16,6 +16,7 @@ class Button(object):
         self.win = win
         self.shape = shape
         self.text = Text(self.center, text)
+        self.onButton = False
     
     def __string__(self):
         """fancy type for the shape object and text within"""
@@ -61,10 +62,10 @@ class Button(object):
         """get width of button"""
         return self.shape.getWidth()
 
-    def draw(self, win):
+    def draw(self):
         """draws button on window"""
-        self.shape.draw(win)
-        self.text.draw(win)
+        self.shape.draw(self.win)
+        self.text.draw(self.win)
         return
 
     def setTextColor(self, color):
@@ -89,15 +90,27 @@ class Button(object):
 
     def onClick(self, callback):
         """check if button is pressed"""
-        click = self.win.getMouse()
+        click = self.win.checkMouse()
         topLeftPoint = self.shape.getP1()
         bottomRightPoint = self.getP2()
-
-        if click.getX() <= bottomRightPoint.getX() and  click.getX() >=topLeftPoint.getX():
-            if click.getY() <= bottomRightPoint.getY() and  click.getY() >=topLeftPoint.getY():
-                callback()
+        #check if clicking or not
+        if click != None:
+            #make the graphics class wierd, only counts as click if mouse is moved over
+            #if dragged over button, then released, doesn't count as a click
+            if click.getX() <= bottomRightPoint.getX() and  click.getX() >=topLeftPoint.getX():
+                if click.getY() <= bottomRightPoint.getY() and  click.getY() >=topLeftPoint.getY():
+                    print("hi")
+                    self.onButton = True
+                else:
+                    self.onButton = False
+            else:
+                self.onButton = False
+        if self.win.getMouseUp() == False and self.onButton == True: #see comment above
+            self.onButton = False
+            callback()
+            return True
         else:
-            return
+            return False
 
 if __name__ == "__main__":
     win = GraphWin("test", 500, 500)
@@ -106,6 +119,8 @@ if __name__ == "__main__":
     rectancle = Rectangle(p1,p2)
     test =  Button(rectancle, "Tests", win)
     test.setFill("red")
-    test.draw(win)
-    test.onClick(test2)
+    test.draw()
+    while True:
+   
+        test.onClick(test2)
     win.getMouse()

@@ -5,7 +5,9 @@ from os.path import isfile
 def newUser():
     print("\nSince this is the first time you used it,")
     print("let's customize your Swindle...")
-    owner = str(input("\nPlease enter your name: "))
+    owner = input("\nPlease enter your name: ")
+    while owner == "":
+        owner = input("Please enter a value: ")
     print("\nWelcome to %s's Swindle v1.0!" % owner)
     return owner
 
