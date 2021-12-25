@@ -67,6 +67,11 @@ class Button(object):
         self.shape.draw(self.win)
         self.text.draw(self.win)
         return
+    def undraw(self):
+        """undraws the button"""
+        self.shape.undraw()
+        self.text.undraw()
+        return
 
     def setTextColor(self, color):
         """sets color of the text"""
@@ -91,7 +96,7 @@ class Button(object):
     def onClick(self, callback):
         """check if button is pressed"""
         click = self.win.checkMouse()
-        topLeftPoint = self.shape.getP1()
+        topLeftPoint = self.getP1()
         bottomRightPoint = self.getP2()
         #check if clicking or not
         if click != None:
@@ -107,10 +112,11 @@ class Button(object):
                 self.onButton = False
         if self.win.getMouseUp() == False and self.onButton == True: #see comment above
             self.onButton = False
-            callback()
-            return True
-        else:
-            return False
+            #if the callback is function run function otherwise return val
+            if type(callback) == type(self.onClick):
+                callback()
+            else: 
+                return callback
 
 if __name__ == "__main__":
     win = GraphWin("test", 500, 500)
