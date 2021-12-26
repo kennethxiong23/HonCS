@@ -1,5 +1,7 @@
 from book import *
 from os.path import isfile
+from graphics import *
+from button import *
 
 def readBookDatabase(filename):
     """ read in book info from bookdb.txt, save each line as a Book object in list.
@@ -32,7 +34,7 @@ def checkList(list, str):
 class Swindle(object):
     """ class for a single Swindle object """
 
-    def __init__(self, owner, ownedBooks, avaliableBooks):
+    def __init__(self, owner, ownedBooks, avaliableBooks, win):
         """ constructor for swindle object, given owner """
         if avaliableBooks == []:
             self.availableBooks = readBookDatabase("bookdb.txt")
@@ -41,6 +43,9 @@ class Swindle(object):
         self.owner = owner
         self.ownedBooks = ownedBooks
         self.pageLength = 20
+        self.win = win
+        self.width = win.getWidth()
+        self.height = win.getHeight()
 
     def __str__(self):
         """ pretty-print info about this object """
@@ -103,19 +108,67 @@ class Swindle(object):
 
     def showOwned(self):
         """prints all the books that the owner owns"""
+        bookButtons = []
         if len(self.ownedBooks) == 0:
-            print("You don't own any books!")
+            text = Text(Point(self.width * 0.5, self.height * 0.5), "You don't own any books")
+            text.draw(self.win)
         else:
+            #creates a list of buttons that corresponds to each books
+            bookButtons = []
+            x = 0.05
             for index in range(len(self.ownedBooks)):
-                print("%d:%s" %(index + 1, self.ownedBooks[index].toString()))
+                height = 1 / len(self.ownedBooks) 
+                y = x + height/2 #x and y are calculated based on amount of books left
+                buttonRect = Rectangle(Point(self.width*0.1, self.height * x), Point(self.width*0.9, self.height * y))
+                bookButtons.append(Button(buttonRect, self.ownedBooks[index].toString(), self.win))
+                x += height
+        for book in bookButtons:
+            if self.width == 300: #text size adjustment for screen size
+                book.setSize(10)
+            elif self.width == 384:
+                book.setSize(11)
+            else:
+                book.setSize(14)
+            book.draw()
+        #draw back buttons
+        backCirc = Circle(Point(self.width * 0.05, self.height * 0.1), self.width * 0.03)
+        backButton = Button(backCirc, "🠔", self.win)
+        backButton.draw()
+        while True:
+            if backButton.onClick(True):
+                for item in self.win.items[:]:
+                    item.undraw()
+                self.win.resetMouse()
+                break
+
+        return bookButtons
     
     def showAvailable(self):
         """show available books to be bought"""
         if len(self.availableBooks) == 0:
-            print("No books are available to be bought.")
+            text = Text(Point(self.width * 0.5, self.height * 0.5), "No books available")
+            text.draw(self.win)
+            return []
         else:
+            #creates a list of buttons that corresponds to each books
+            bookButtons = []
+            x = 0.05
             for index in range(len(self.availableBooks)):
-                print("%d:%s" %(index + 1, self.availableBooks[index].toString()))
+                height = 1 / len(self.availableBooks) 
+                y = x + height/2 #x and y are calculated based on amount of books left
+                buttonRect = Rectangle(Point(self.width*0.1, self.height * x), Point(self.width*0.9, self.height * y))
+                bookButtons.append(Button(buttonRect, self.availableBooks[index].toString(), self.win))
+                x += height
+        for book in bookButtons:
+            if self.width == 300: #text size adjustment for screen size
+                book.setSize(10)
+            elif self.width == 384:
+                book.setSize(11)
+            else:
+                book.setSize(14)
+            book.draw()
+        
+        return bookButtons
     
     def getOwner(self):
         return self.owner
@@ -140,25 +193,33 @@ class Swindle(object):
 
     def buy(self):
         """allows user to buy book from available books"""
-        self.showAvailable()
-        prompt ="\nWhich book would you like to buy? (0 to skip): "
-        bookNum = checkList(self.availableBooks, prompt)
-        if bookNum >= 1:
-            ownedBook = self.availableBooks.pop(bookNum-1)
-            self.ownedBooks.append(ownedBook)
-            print("\nYou've successfully purchased the book: %s" %ownedBook.getTitle())
+        bookButtons = self.showAvailable()
+        #draw back buttons
+        backCirc = Circle(Point(self.width * 0.05, self.height * 0.1), self.width * 0.03)
+        backButton = Button(backCirc, "🠔", self.win)
+        backButton.draw()
+        while True:
+            if backButton.onClick(True):
+                for item in self.win.items[:]:
+                    item.undraw()
+                break
+            if len(bookButtons) >= 1:
+                for index in range (len(bookButtons)):
+                    #check if a buttons is clicked
+                    if bookButtons[index].onClick(True):
+                        ownedBook = self.availableBooks.pop(index)
+                        #add to owned books
+                        self.ownedBooks.append(ownedBook)
+                        for book in bookButtons:
+                            book.undraw()
+                        #redraw options
+                        bookButtons = self.showAvailable()
+                        self.win.resetMouse()
+                        break
+            
     
     def read(self):
         """allows the user to read a book"""
-        self.showOwned()
-        if len(self.ownedBooks) > 0:
-            prompt = "\nWhich book would you like to read? (0 to skip): "
-            bookNum = checkList(self.ownedBooks, prompt)
-            if bookNum >= 1:
-                userBook = self.ownedBooks[bookNum-1]
-                self.displayText(userBook)
-                print("\nSetting bookmark in %s at page %i" 
-                    %(userBook.getTitle(), userBook.getBookmark()))
 
 if __name__ == '__main__':
     print("Testing the Swindle class...")

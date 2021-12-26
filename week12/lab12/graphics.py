@@ -219,8 +219,8 @@ class GraphWin(tk.Canvas):
         master.resizable(0,0)
         self.foreground = "black"
         self.items = []
-        self.mouseX = None
-        self.mouseY = None
+        self.mouseX = 0
+        self.mouseY = 0
         self.bind("<Button-1>", self._onClick)
         self.bind_all("<Key>", self._onKey)
         #https://stackoverflow.com/questions/3288001/how-do-i-bind-an-event-to-the-left-mouse-button-being-held-down
@@ -335,15 +335,18 @@ class GraphWin(tk.Canvas):
         self.update()
         if self.mouseX != None and self.mouseY != None:
             x,y = self.toWorld(self.mouseX, self.mouseY)
-            self.mouseX = None
-            self.mouseY = None
             return Point(x,y)
-        else:
-            return None
+    
+    def resetMouse(self):
+        """resets the mouse position"""
+        self.mouseX = 0
+        self.mouseY = 0
+        return
 
     def getMouseUp(self):
         x = self.mouseY
         return self.mousePressed
+    
 
     def getKey(self):
         """Wait for user to press a key and return it as a string."""

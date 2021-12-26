@@ -34,22 +34,23 @@ def getWinSize(width, height, win):
     medButton.draw()
     largeButton.draw()
 
-    while width != 300 and width != 384 and width != 480:
-        smallPressed = smallButton.onClick((300, 400))
-        medPressed = medButton.onClick((384, 512))
-        largePressed = largeButton.onClick((480, 640))
-        if smallPressed != None or medPressed != None or largePressed != None:
-            print ('ehy')
-
+    #detect the mouse click for each of the options
+    size = None
+    while size == None:
+        if smallButton.onClick([300, 400]) ==  [300,400]:
+            size = [300,400]
+        elif medButton.onClick([384,512]) ==  [384,512]:
+            size = [384,512]
+        elif largeButton.onClick([480, 640]) == [480, 640]:
+            size = [480, 640]
     win.close()
-    print(width)
-    return width, height 
-    
+    return size
 
 def newUser():
     width = 500
     height = 600
     firstTimeWin = GraphWin("First Time Launch", width, height)
+
     #draw all the text stuff
     topText = "Since this is the first time you used it,"
     midText = "let's customize your Swindle..."
@@ -70,7 +71,7 @@ def newUser():
     welcomeTextMid.draw(firstTimeWin)
     nextButton.draw()
 
-    
+    #get owned from text box with either a click or a enter
     owner = None
     while owner == None:
         CLICK = nextButton.onClick(True)
@@ -82,18 +83,8 @@ def newUser():
     welcomeTextTop.undraw()
     welcomeTextMid.undraw()
     nextButton.undraw()
-    width, height = getWinSize(width, height, firstTimeWin)
-    return owner, width, height, firstTimeWin
-
-
-    # firstTimeWin.getMouse()
-    # print("\nSince this is the first time you used it,")
-    # print("let's customize your Swindle...")
-    # owner = str(input("Please enter your name: "))
-    # while owner == "":
-    #     owner = input("Please enter a value: ")
-    # print("\nWelcome to %s's Swindle v1.0!" % owner)
-    return "bob", "bob", "bob", "bob"
+    size = getWinSize(width, height, firstTimeWin)
+    return owner, size
 
 def saveUser(swindle):
     """saves user preferences to a file"""
@@ -138,29 +129,55 @@ def loadUser():
     infile.close()
     return userSwindle
 
-def mainMenu():
-    print("\n--------------------------------------------------\n")
-    print("1) Buy/See available books\n2) See owned books\n3) Read a book\n4) Exit\n")
-    while True:
-        userInput = str(input("---> "))
-        try:
-            menuChoice = int(userInput)
-            if 1 <= menuChoice <= 4:
-                return menuChoice
-            else:
-                print("invalid number, try again")
-        except ValueError:
-            print("invalid input, try again")
+def mainMenu(win):
+    width = win.getWidth()
+    height = win.getHeight()
+    #load all the options as buttons
+    buyRect = Rectangle(Point(width * 0.1, height * 0.1), Point(width * 0.9, height * 0.25))
+    ownedRect = buyRect.clone()
+    ownedRect.move(0, height * 0.2)
+    readRect = ownedRect.clone()
+    readRect.move(0, height * 0.2) 
+    exitRect = readRect.clone()
+    exitRect.move(0, height *0.2)
+
+    buyButton = Button(buyRect, "Buy/See Available Books", win)
+    ownedButton = Button(ownedRect, "See Owned Books", win)
+    readButton = Button(readRect, "Read a Book", win)
+    exitButton = Button(exitRect, "Exit", win)
+
+    buyButton.draw()
+    ownedButton.draw()
+    readButton.draw()
+    exitButton.draw()
+
+    #dectect mouse click for each of the options
+    choice = None
+    while choice == None:
+        if buyButton.onClick(True):
+            choice = 1
+        elif ownedButton.onClick(True):
+            choice = 2
+        elif readButton.onClick(True):
+            choice = 3
+        elif exitButton.onClick(True):
+            choice = 4
+    for item in win.items[:]:
+        item.undraw()
+    win.flush()
+    win.resetMouse()
+    return choice
 
 def main():
     if isfile("user-settings.txt"): #checks if it is first time using 
         userSwindle = loadUser()
     else:
-        owner, win, width, height = newUser()                   # Display instructions and get user's name
-        userSwindle = Swindle(owner, [], [])        # Create a new Swindle ereader for them
+        owner, size = newUser()                   # Display instructions and get user's name
+        ereaderWin = GraphWin("%s's Swindle" %owner, size[0], size[1])
+        userSwindle = Swindle(owner, [], [], ereaderWin)        # Create a new Swindle ereader for them
           
     while True:
-        menuChoice = mainMenu()         # Display ereader's main menu
+        menuChoice = mainMenu(ereaderWin)         # Display ereader's main menu
         if menuChoice == 1:
             userSwindle.buy()           # View available books with option to buy
         elif menuChoice == 2:
@@ -169,7 +186,8 @@ def main():
             userSwindle.read()          # Choose a book to read
         else:
             break                       # Turn off ereader (quit the program)
-    saveUser(userSwindle)
+        print(menuChoice)
+    # saveUser(userSwindle)
 
 
 main()

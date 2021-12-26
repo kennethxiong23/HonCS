@@ -19,7 +19,7 @@ class Book(object):
 
     def toString (self):
         """ pretty-print info about this object """
-        return "%25s by %20s(%s)" % (self.title, self.author, self.year)
+        return "%s \n%s(%s)" % (self.title, self.author, self.year)
 
     def getTitle(self):
         return self.title

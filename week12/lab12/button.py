@@ -104,7 +104,6 @@ class Button(object):
             #if dragged over button, then released, doesn't count as a click
             if click.getX() <= bottomRightPoint.getX() and  click.getX() >=topLeftPoint.getX():
                 if click.getY() <= bottomRightPoint.getY() and  click.getY() >=topLeftPoint.getY():
-                    print("hi")
                     self.onButton = True
                 else:
                     self.onButton = False
