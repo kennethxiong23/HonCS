@@ -16,7 +16,7 @@ def merge(leftL, rightL, L):
     j = 0
     index = 0
     while i < len(leftL) and j < len(rightL):
-        if leftL[i][0] <= rightL[j][0]:
+        if leftL[i] <= rightL[j]:
             L[index] = leftL[i]
             i += 1
         else:
@@ -71,77 +71,106 @@ def readText(filename):
     """
     Purpose: Reads in the input file that contains the full text of a book
     Paramters: Filename(str)
-    Return Val: list of lists with individual words and how many times they occured
+    Return Val: list of every valid word
     """
     readFile = open(filename, 'r')
-    L = [0]
-    time0 = time()
     words = []
-    num = 0
     for line in readFile:
         line = line.strip()
         line = line.split()
         for word in line:
-            num += 1
-            if num == 100000:
-                print(num, time()-time0)
-            if num == 10000:
-                print(num, time()-time0)
-            if num == 20000:
-                print(num, time()-time0)
-            if num == 50000:
-                print(num, time()-time0)
-            if len(words) == 0:
-                if word.isalpha():
-                    words.append([word, 1])
-                else:
-                    if word[0].isalpha() == False or word[-1].isalpha() == False:
-                        if word[0].isalpha == False:
-                            word = word[1:]
-                        else:
-                            word == word[:-2]
-            else:
-                index =  findWord(word, words, L)
-                if index == -1: #add new word to list
-                    if word.isalpha():
-                        words.append([word, 1])
-                    else:
-                        if word[0].isalpha() == False or word[-1].isalpha() == False:
-                            if word[0].isalpha == False:
-                                word = word[1:]
-                            else:
-                                word == word[:-2]
-                    # mergeSort(words)
-                else:
-                    words[index][1] += 1
-    print(L)
-    return [words, L]
-def findWord(word,  knownWords, L):
-    """
-    Purpose: Check if word has already been stored in main list
-    Paramters: word(str), words already stored in the main list(list)
-    """
-    for index in range(0, len(knownWords)):
-        if word == knownWords[index][0]:
-            if word == "whalemen":
-                L[0] += 1
-            return index
-        else:
+            word = word.lower()
+            word = word.replace("'s","")
+            word = word.replace("--", " ")
             if len(word) > 0:
-                if word[0].isalpha() == False or word[-1].isalpha() == False:
-                    if word[0].isalpha() == False:
-                        word = word[1:]
-                    elif word[-1].isalpha() == False:
-                        word = word[:-1]
-                    else:
-                        word = word[1:-1]
-                if word == knownWords[index][0]:
-                    return index
+                if word.isalpha():
+                    words.append(word)
                 else:
-                    if word.lower() == knownWords[index][0] :
-                        return index
-    return -1
+                    if word[:-1].isalpha():
+                        words.append(word[:-1])
+                    elif word[1:].isalpha():
+                        words.append(word[1:])
+    mergeSort(words)
+    readFile.close()
+    return(words)
 
+def countWords( wordList):
+    """
+    Purpose: tallies up all the same words in a given list
+    Paramters: list of all the word(list)
+    Return Val: list of list with [string, value] pairs
+    """
+    
+    wordAndValue = []
+    sameWordStart = 0
+    for index in range (len(wordList)):
+        amount = index - sameWordStart + 1
+        if index == len(wordList) - 1:
+            amount = index - sameWordStart + 1
+            wordAndValue.append([wordList[index], amount])
+        else:
+            if wordList[index] != wordList[index + 1]:
+                wordAndValue.append([wordList[index], amount])
+                sameWordStart = index + 1
+    return wordAndValue
+
+def writeList(filename, list):
+    """
+    Purpose: writes a list of word, value pairs to a file
+    Parameters: Filename(str), list(list)
+    Return Val: None
+    """
+    outFile = open(filename, "w")
+    for item in list:
+        outFile.write('%s,%s\n' %(item[0], item[1]))
+    outFile.close()
+    return
+
+def addCount(inName, outName):
+    """
+    Purpose: Adds a list of word value pairs to a word counts file from another file
+    Parameters: Filename(str), list(list)
+    Return Val: None
+    """
+    infile = open(inName, "r")
+    inList = []
+    for line in infile:
+        line = line.strip()
+        line = line.split(",")
+        inList.append(line)
+    infile.close()
+    outfile = open(outName, "r")
+    outList = []
+    for line in outfile:
+        line = line.strip()
+        line = line.split(",")
+        outList.append(line)
+    outfile.close()
+    listIndex = 0
+    writeString = ""
+    for item in outList:
+        if listIndex >= len(inList) - 1:
+            break
+        if item[0] < inList[listIndex][0]:
+            writeString += ("%s,%s\n" %(item[0], item[1]))
+        elif item[0] == inList[listIndex][0]:
+             writeString += ("%s,%s\n" %(item[0], int(item[1]) + int(inList[listIndex][1])))
+             listIndex += 1
+        else:
+            writeString += ("%s,%s\n" %(inList[listIndex ][0],inList[listIndex ][1]))
+            listIndex += 1
+    outfile = open(outName, "w")
+    outfile.write(writeString)
+    outfile.close()
+    return
+
+def main():
+    time1 = time()
+    print(time())
+    readList = readText("moby_dick.txt")
+    valueList = countWords(readList)
+    writeList("word-count-moby.txt", valueList)
+    addCount("word-count-moby.txt", "wordCounts.txt")
 
 
 
