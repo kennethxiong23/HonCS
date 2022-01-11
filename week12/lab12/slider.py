@@ -11,8 +11,12 @@ class Slider(object):
         self.rectangle = rectangle
         self.rectangle.setFill(rectColor)
         self.rectangle.setOutline(rectColor)
-        self.radius = (p2.getY() - p1.getY()) * 1.25
-        self.circle = Circle(self.center,  self.radius )
+        self.p1 = self.rectangle.getP1()
+        self.p2 = self.rectangle.getP2()
+        self.radius = (self.p2.getY() - self.p1.getY()) * 1.25
+        self.circle = Circle(self.center,  self.radius)
+        self.rightEdge = (self.rectangle.p2.getX() - self.rectangle.p1.getX())/2
+        self.circle.move(self.rightEdge, 0)
         self.circle.setFill(circColor)
         self.circle.setOutline(circColor)
         self.holdingSlider = False
@@ -77,13 +81,13 @@ class Slider(object):
         click = self.win.checkMouse()
         if click != None:   #check if clicking the circle or not
             #check initially is mouse is on circle
-            if click.getX() <= p2.getX() and  click.getX() >= p1.getX():
-                    if click.getY() <= p2.getY() and  click.getY() >= p1.getY():
+            if click.getX() <= self.p2.getX() and  click.getX() >= self.p1.getX():
+                    if click.getY() <= self.p2.getY() and  click.getY() >= self.p1.getY():
                         self.holdingSlider = True
                         dX = click.getX() - self.circle.getCenter().getX()
                         self.circle.move(dX, 0)
             #if mouse moves off circle, but still holding down, still move slider
-            if click.getX() <= p2.getX() and  click.getX() >= p1.getX():
+            if click.getX() <= self.p2.getX() and  click.getX() >= self.p1.getX():
                 if self.holdingSlider == True and self. win.getMouseUp() == True:
                     dX = click.getX() - self.circle.getCenter().getX()
                     self.circle.move(dX, 0)
@@ -96,7 +100,8 @@ class Slider(object):
         min = self.getRectP1().getX()
         max = self.getRectP2().getX()
         val = min - self.circle.getCenter().getX()
-        adjustedVal = val/(min-max)
+        adjustedVal = (val/(min-max)) * 0.7 + 0.3
+
         return adjustedVal
                     
     def draw(self):

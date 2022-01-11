@@ -6,7 +6,6 @@
 """
 from string import punctuation
 from time import time
-
 def merge(leftL, rightL, L):
     """
     Purpose: Merge two lists
@@ -75,6 +74,7 @@ def readText(filename):
     Return Val: list of lists with individual words and how many times they occured
     """
     readFile = open(filename, 'r')
+    L = [0]
     time0 = time()
     words = []
     num = 0
@@ -101,7 +101,7 @@ def readText(filename):
                         else:
                             word == word[:-2]
             else:
-                index =  findWord(word, words)
+                index =  findWord(word, words, L)
                 if index == -1: #add new word to list
                     if word.isalpha():
                         words.append([word, 1])
@@ -114,9 +114,9 @@ def readText(filename):
                     # mergeSort(words)
                 else:
                     words[index][1] += 1
-    return words
-
-def findWord(word,  knownWords):
+    print(L)
+    return [words, L]
+def findWord(word,  knownWords, L):
     """
     Purpose: Check if word has already been stored in main list
     Paramters: word(str), words already stored in the main list(list)
@@ -124,7 +124,7 @@ def findWord(word,  knownWords):
     for index in range(0, len(knownWords)):
         if word == knownWords[index][0]:
             if word == "whalemen":
-                print("hi")
+                L[0] += 1
             return index
         else:
             if len(word) > 0:
@@ -142,19 +142,19 @@ def findWord(word,  knownWords):
                         return index
     return -1
 
-def main():
-    time1 = time()
-    print(time())
-    readList = readText("moby_dick.txt")
-    print(mergeSort(readList))
-    print(readList)
-
-    time2 = time()
-    print(time2-time1)
 
 
 
+time1 = time()
+print(time())
+readList = readText("moby_dick.txt")
+print(mergeSort(readList[0]))
+print(readList[0])
+print(readList[1])
+time2 = time()
+print(time2-time1)
 
 
 
-main()
+
+
