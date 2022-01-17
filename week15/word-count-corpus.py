@@ -6,6 +6,7 @@
 """
 from string import punctuation
 from time import time
+
 def merge(leftL, rightL, L):
     """
     Purpose: Merge two lists
@@ -157,8 +158,7 @@ def addCount(inName, outName):
              writeString += ("%s,%s\n" %(item[0], int(item[1]) + int(inList[listIndex][1])))
              listIndex += 1
         else:
-            writeString += ("%s,%s\n" %(inList[listIndex ][0],inList[listIndex ][1]))
-            listIndex += 1
+            writeString += ("%s,%s\n" %(item[0], item[1]))
     outfile = open(outName, "w")
     outfile.write(writeString)
     outfile.close()
@@ -172,18 +172,12 @@ def main():
     writeList("word-count-moby.txt", valueList)
     addCount("word-count-moby.txt", "wordCounts.txt")
 
-
-
-time1 = time()
-print(time())
-readList = readText("moby_dick.txt")
-print(mergeSort(readList[0]))
-print(readList[0])
-print(readList[1])
-time2 = time()
-print(time2-time1)
+    time2 = time()
+    print(time2-time1)
 
 
 
 
 
+
+main()
